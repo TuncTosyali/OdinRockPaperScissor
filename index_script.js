@@ -1,4 +1,16 @@
-console.clear();
+//console.clear();
+
+const rockButton = document.querySelector("#rockButton");
+const paperButton = document.querySelector("#paperButton");
+const scissorButton = document.querySelector("#scissorButton");
+const result = document.querySelector("#result");
+const allButtons = document.querySelectorAll("button");
+allButtons.forEach(function (singleButton) {
+    singleButton.addEventListener("click", playRound);
+});
+let userScore = 0;
+let compScore = 0;
+let tieScore=0;
 
 function getcompchoice() {
     let randnum = Math.floor((Math.random() * 1000000000)) % 3;
@@ -8,41 +20,28 @@ function getcompchoice() {
                 : "NaRPS";
 }
 
-function getuserchoice() {
-    let userchoice = null;
-    while ((userchoice === null) || (userchoice != "1" && userchoice != "2" && userchoice != "3")) {
-        userchoice = prompt("enter your RPS choice\n  - 1 for Rock\n  - 2 for Paper\n  - 3 for Scissor");
-    }
-    return userchoice == "1" ? "Rock"
-        : userchoice == "2" ? "Paper"
-            : userchoice == "3" ? "Scissor"
-                : "NaRPS";
-}
+function playRound(e) {
+    let compchoice = getcompchoice();
+    let userchoice = e.target.textContent;
+    let roundWinner = "";
 
-function playRound(compchoice, userchoice) {
-    if (userchoice == compchoice) { return "Tie"; }
+    if (userchoice == compchoice) { roundWinner = "Tie"; }
     else if (userchoice == "Rock") {
-        return compchoice == "Paper" ? "comp" : "user";
+        roundWinner = (compchoice == "Paper" ? "comp" : "user");
     }
     else if (userchoice == "Paper") {
-        return compchoice == "Scissor" ? "comp" : "user";
+        roundWinner = (compchoice == "Scissor" ? "comp" : "user");
     }
     else if (userchoice == "Scissor") {
-        return compchoice == "Rock" ? "comp" : "user";
+        roundWinner = (compchoice == "Rock" ? "comp" : "user");
     }
-    else { return "one or both choices is NaRPS" }
+    else { roundWinner = "one or both choices is NaRPS" }
+    if (roundWinner == "user") userScore++;
+    else if (roundWinner == "comp")compScore++;
+    else tieScore++;
+    result.innerHTML = `userchoice: ${userchoice} | compchoice: ${compchoice}<br>
+                        roundWinner is ${roundWinner}<br>
+                        <br>
+                        Overall score<br>
+                        userScore: ${userScore} | compScore: ${compScore} | tieScore: ${tieScore}`;
 }
-1
-// think of below as main entry func like int main() in c++
-
-let userscore = 0;
-let compscore = 0;
-let whowins = "";
-while (userscore < 3 && compscore < 3) {
-    whowins = playRound(getcompchoice(), getuserchoice());
-    console.log(`${whowins} winned last round`);
-    whowins == "comp" ? compscore+=1 : userscore+=1;
-    console.log(`comp: ${compscore}\nuser: ${userscore}`);
-}
-//whowins = userscore>compscore ? "user" : "comp";
-console.log(`final winner is ${userscore>compscore ? "user" : "comp"}`);
